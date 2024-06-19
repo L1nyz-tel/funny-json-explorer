@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.context.Context;
 import org.example.factory.JsonIconFactory;
 import org.example.factory.JsonPrinterFactory;
 import org.example.icon.Icon;
@@ -38,13 +39,14 @@ public class FunnyJsonExplorer
             String filePath = params.get("file");
             try {
                 HashMap jsonMap = (HashMap) readJson(filePath);
-                jsonPrinter = JsonPrinterFactory.createPrinter(params.getOrDefault("style", "default"));
                 icon = JsonIconFactory.createIcon(params.getOrDefault("icon", "default"));
-                jsonPrinter.print(jsonMap, icon);
+
+                Context context = new Context();
+                context.setStrategy(JsonPrinterFactory.createPrinter(params.getOrDefault("style", "default")));
+                context.execute(jsonMap, icon);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } else {
             System.out.println("No JSON file provided!");
         }
